@@ -10,14 +10,14 @@ type Mode = "signup" | "login";
 const COPY = {
   signup: {
     title: "Create your PowerShare account",
-    lead: "Sign up with your email or Google. It takes a few seconds, and it's the account you'll use to sign in to the app.",
+    lead: "Connect your wallet to create your account. It takes a few seconds, and it's the account you'll use to sign in to the app.",
     cta: "Sign up",
     switchText: "Already have an account?",
     switchLink: { href: "/login", label: "Log in" },
   },
   login: {
     title: "Log in to PowerShare",
-    lead: "Use the same email or Google account you signed up with.",
+    lead: "Connect the same wallet you signed up with.",
     cta: "Log in",
     switchText: "New here?",
     switchLink: { href: "/signup", label: "Create an account" },
@@ -43,10 +43,11 @@ function PrivyAuthCard({ mode }: { mode: Mode }) {
   const copy = COPY[mode];
 
   if (ready && authenticated) {
-    const email = user?.email?.address ?? user?.google?.email;
+    const address = user?.wallet?.address;
+    const who = address ? `${address.slice(0, 6)}…${address.slice(-4)}` : null;
     return (
       <div className="glass auth-card">
-        <span className="auth-ok">You&apos;re signed in{email ? ` as ${email}` : ""}</span>
+        <span className="auth-ok">You&apos;re signed in{who ? ` as ${who}` : ""}</span>
         <h1>Your account is ready.</h1>
         <p>One more step: get the app and sign in with the same account.</p>
         <div className="auth-step">
@@ -55,7 +56,7 @@ function PrivyAuthCard({ mode }: { mode: Mode }) {
         </div>
         <div className="auth-step">
           <b>2</b>
-          <span>Open it and sign in with {email ?? "this account"}.</span>
+          <span>Open it and sign in with {who ? `the wallet ${who}` : "the same wallet"}.</span>
         </div>
         <div className="auth-step">
           <b>3</b>

@@ -6,12 +6,12 @@ import { PRIVY_APP_ID } from "@/lib/config";
 
 type Variant = "pill" | "button";
 
-/** Nav account button: "Log in" (or "Log out" once signed in). A placeholder until Privy is configured. */
+/** Nav account button: "Sign up" (or "Log out" once signed in). A placeholder until Privy is configured. */
 export function AuthButton({ as = "pill" }: { as?: Variant }) {
   if (!PRIVY_APP_ID) {
     return (
       <span className={as === "button" ? "btn btn-glass" : "pill"} aria-disabled="true">
-        Log in <span className="tag">Coming soon</span>
+        Sign up <span className="tag">Coming soon</span>
       </span>
     );
   }
@@ -31,8 +31,8 @@ function PrivyAuthButton({ as }: { as: Variant }) {
     );
   }
   return (
-    <Link href="/login" className={cls}>
-      Log in
+    <Link href="/signup" className={cls}>
+      Sign up
     </Link>
   );
 }

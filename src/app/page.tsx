@@ -80,7 +80,7 @@ const FAQ = [
   },
   {
     q: "Is it free? Do I need an account?",
-    a: "It's free. Create an account on this site with your email or Google, then sign in to the app with it. One account per person.",
+    a: "It's free. Create an account on this site by connecting your wallet, then sign in to the app with the same wallet. One account per person.",
   },
 ];
 
