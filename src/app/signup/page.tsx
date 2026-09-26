@@ -1,0 +1,21 @@
+import type { Metadata } from "next";
+import { Nav } from "@/components/Nav";
+import { SceneBackground } from "@/components/SceneBackground";
+import { AuthPage } from "@/components/AuthPage";
+
+export const metadata: Metadata = {
+  title: "Sign up | PowerShare",
+  description: "Create your PowerShare account, then sign in to the app with it.",
+};
+
+export default function SignUp() {
+  return (
+    <>
+      <SceneBackground dim />
+      <Nav />
+      <main className="auth-page">
+        <AuthPage mode="signup" />
+      </main>
+    </>
+  );
+}

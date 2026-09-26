@@ -1,0 +1,8 @@
+node_modules
+.next
+next-env.d.ts
+*.tsbuildinfo
+# Real environment files never go in git: only the blank template (.env.example) is committed.
+.env
+.env.*
+!.env.example
