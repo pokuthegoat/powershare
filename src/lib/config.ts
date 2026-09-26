@@ -1,7 +1,7 @@
 export const SITE = {
   name: "PowerShare",
   tagline: "GPU power for stocks.",
-  contactEmail: "hello@powershare.app",
+  contactEmail: "powershare.hq@gmail.com",
   url: "https://powershare.app",
 } as const;
 

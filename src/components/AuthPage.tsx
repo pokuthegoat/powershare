@@ -28,7 +28,7 @@ const COPY = {
 export function AuthPage({ mode }: { mode: Mode }) {
   if (!PRIVY_APP_ID) {
     return (
-      <div className="glass auth-card">
+      <div className="box auth-card">
         <h1>{COPY[mode].title}</h1>
         <p>Account sign-up isn&apos;t switched on yet. Check back soon.</p>
       </div>
@@ -46,7 +46,7 @@ function PrivyAuthCard({ mode }: { mode: Mode }) {
     const address = user?.wallet?.address;
     const who = address ? `${address.slice(0, 6)}…${address.slice(-4)}` : null;
     return (
-      <div className="glass auth-card">
+      <div className="box auth-card">
         <span className="auth-ok">You&apos;re signed in{who ? ` as ${who}` : ""}</span>
         <h1>Your account is ready.</h1>
         <p>One more step: get the app and sign in with the same account.</p>
@@ -63,8 +63,8 @@ function PrivyAuthCard({ mode }: { mode: Mode }) {
           <span>Press Start. Your GPU starts earning.</span>
         </div>
         <div className="auth-actions">
-          <DownloadButton variant="white" />
-          <button type="button" className="btn btn-glass" onClick={() => void logout()}>
+          <DownloadButton variant="primary" />
+          <button type="button" className="btn btn-outline" onClick={() => void logout()}>
             Log out
           </button>
         </div>
@@ -73,7 +73,7 @@ function PrivyAuthCard({ mode }: { mode: Mode }) {
   }
 
   return (
-    <div className="glass auth-card">
+    <div className="box auth-card">
       <h1>{copy.title}</h1>
       <p>{copy.lead}</p>
       <div className="auth-actions">

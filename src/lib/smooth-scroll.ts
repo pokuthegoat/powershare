@@ -11,7 +11,8 @@ import type { LenisOptions } from "lenis";
  * wheel builds speed and stopping it leaves a coast. The scroll-linked background (SceneBackground.tsx) reads the
  * page's scroll position every frame, so it moves with exactly this glide.
  */
-export const WHEEL_DURATION = 1.2;
+/** How long each wheel notch takes to glide to its target. Longer = heavier: it starts easing sooner and coasts further. */
+export const WHEEL_DURATION = 1.9;
 const expoOut = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 
 /** True for elements that scroll (or lock scrolling) by themselves: modals must keep native wheel behaviour. */
@@ -26,7 +27,8 @@ export const LENIS_OPTIONS: LenisOptions = {
   smoothWheel: true,
   duration: WHEEL_DURATION,
   easing: expoOut,
-  wheelMultiplier: 1,
+  // How far each notch moves the target. Below 1 the page feels weightier: it takes more spinning to travel the same distance.
+  wheelMultiplier: 0.8,
   // Touch and trackpad-free devices keep their own native, OS-tuned momentum. Only the mouse wheel is smoothed.
   syncTouch: false,
   // Clicking a link to another page during a glide cancels the glide, so the new page isn't scrolled by the old one.

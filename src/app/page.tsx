@@ -4,7 +4,9 @@ import { Reveal } from "@/components/Reveal";
 import { Logo } from "@/components/Logo";
 import { Faq } from "@/components/Faq";
 import { DownloadButton, SignUpButton } from "@/components/Buttons";
-import { REWARD_TICKERS, SITE } from "@/lib/config";
+import { AppMock } from "@/components/AppMock";
+import { TickerMarquee } from "@/components/TickerMarquee";
+import { SITE } from "@/lib/config";
 
 const STEPS = [
   {
@@ -68,7 +70,7 @@ const FAQ = [
   },
   {
     q: "Can I still use my PC?",
-    a: "Yes. You're in control: press Stop any time and your GPU is yours again. Start it again whenever it's idle.",
+    a: "Of course, it's your PC. Press Stop any time and your GPU is yours again. Start it again whenever it's idle.",
   },
   {
     q: "How do I get paid?",
@@ -101,22 +103,25 @@ export default function Home() {
                 </span>
                 <span className="badge">Windows app</span>
               </Reveal>
-              <Reveal as="h1" id="hero-title" className="t-display" delay={80}>
-                Your GPU is sitting idle. <span className="hl">Make it work.</span>
+              <Reveal as="h1" id="hero-title" className="t-display hero-title" delay={80}>
+                <span className="line">Your GPU is</span> <span className="line">sitting idle.</span>{" "}
+                <span className="line">
+                  <span className="mark">Make it work.</span>
+                </span>
               </Reveal>
-            </div>
-            <div className="hero-right">
-              <Reveal as="p" className="t-lead" delay={200}>
-                Download the app, connect your GPU and let it contribute while you&apos;re away. Earn points for every
-                minute, then cash them out for stocks.
-              </Reveal>
-              <Reveal className="hero-cta" delay={300}>
-                <DownloadButton />
-                <SignUpButton />
-              </Reveal>
-              <Reveal as="p" className="hero-note" delay={360}>
-                Free to join. Download, connect, contribute, earn.
-              </Reveal>
+              <div className="hero-sub">
+                <Reveal as="p" className="t-lead" delay={200}>
+                  Download the app, connect your GPU and let it contribute while you&apos;re away. Earn points for
+                  every minute, then cash them out for stocks.
+                </Reveal>
+                <Reveal className="hero-cta" delay={300}>
+                  <DownloadButton />
+                  <SignUpButton />
+                </Reveal>
+                <Reveal as="p" className="hero-note" delay={360}>
+                  Free to join. Your GPU has napped long enough.
+                </Reveal>
+              </div>
             </div>
           </div>
         </section>
@@ -135,7 +140,7 @@ export default function Home() {
                 <DownloadButton />
               </div>
             </Reveal>
-            <Reveal className="glass progress-card" delay={120}>
+            <Reveal className="box progress-card" delay={120}>
               <div className="progress-top">
                 <span className="t-eyebrow">Your balance</span>
                 <span className="chip is-live">Contributing</span>
@@ -155,28 +160,36 @@ export default function Home() {
         </section>
 
         {/* 02 WHAT YOU CAN EARN */}
-        <section id="what-you-can-earn" className="section">
-          <div className="container">
+        {/* The page's one big beat: a full-width black band with an oversized number. */}
+        <section id="what-you-can-earn" className="band-ink band-earn">
+          <div className="container earn-inner">
             <Reveal className="section-head">
               <span className="t-eyebrow section-num">02 &middot; What you can earn</span>
-              <p className="t-h1">$1 for every 1.5 hours.</p>
-              <p className="t-lead t-muted">
-                Earnings are simple and based on time: the longer your GPU is connected, the more you earn. No
-                benchmarks, no tiers, no fees.
-              </p>
+            </Reveal>
+            <Reveal as="h2" className="earn-giant" delay={80}>
+              <span className="earn-num">$1</span>
+              <span className="earn-per">
+                every 90 minutes
+                <br />
+                your GPU is connected.
+              </span>
+            </Reveal>
+            <Reveal as="p" className="t-lead earn-lead" delay={160}>
+              Earnings are simple and based on time: the longer your GPU is connected, the more you earn. No benchmarks,
+              no tiers, no fees.
             </Reveal>
             <div className="stats">
-              <Reveal className="glass stat">
-                <span className="num">$1</span>
-                <p>For every 90 minutes your GPU is connected</p>
-              </Reveal>
-              <Reveal className="glass stat" delay={80}>
+              <Reveal className="stat">
                 <span className="num">$16</span>
                 <p>For a full 24 hours of contributing</p>
               </Reveal>
-              <Reveal className="glass stat" delay={160}>
+              <Reveal className="stat" delay={80}>
                 <span className="num">$0</span>
                 <p>To join. You only need a Windows PC and a GPU</p>
+              </Reveal>
+              <Reveal className="stat" delay={160}>
+                <span className="num">1 pt</span>
+                <p>For every minute your GPU is connected. 90 points is worth $1</p>
               </Reveal>
             </div>
             <Reveal delay={200}>
@@ -197,15 +210,10 @@ export default function Home() {
                 Points are a stepping stone. Cash them out for shares in companies you already know.
               </p>
             </Reveal>
-            <Reveal className="ticker-row" delay={100}>
-              {REWARD_TICKERS.map((t) => (
-                <div className="ticker" key={t.symbol}>
-                  <b>{t.symbol}</b>
-                  <span>{t.name}</span>
-                </div>
-              ))}
-            </Reveal>
           </div>
+          <Reveal className="marquee-wrap" delay={100}>
+            <TickerMarquee />
+          </Reveal>
         </section>
 
         {/* 04 HOW IT WORKS */}
@@ -220,7 +228,7 @@ export default function Home() {
             </Reveal>
             <div className="steps">
               {STEPS.map((s, i) => (
-                <Reveal key={s.title} className="glass step" delay={i * 70}>
+                <Reveal key={s.title} className="step" delay={i * 70}>
                   <span className="step-num">0{i + 1}</span>
                   <svg
                     className="step-icon"
@@ -242,6 +250,15 @@ export default function Home() {
           </div>
         </section>
 
+        {/* A line with some attitude between the sections. */}
+        <section className="interlude" aria-label="A word from us">
+          <div className="container">
+            <Reveal as="p" className="interlude-line">
+              Sleep is for people. <span>Graphics cards work in shifts.</span>
+            </Reveal>
+          </div>
+        </section>
+
         {/* 05 WHAT IT PAYS */}
         <section id="what-it-pays" className="section">
           <div className="container">
@@ -252,7 +269,7 @@ export default function Home() {
                 You earn 1 point for every minute your GPU is connected, and 90 points is worth $1.
               </p>
             </Reveal>
-            <Reveal className="glass pay-table" delay={100}>
+            <Reveal className="pay-table" delay={100}>
               <div className="pay-row is-head">
                 <span>Connected</span>
                 <span>Points</span>
@@ -291,37 +308,8 @@ export default function Home() {
               </div>
               <p className="fine">The installer is a plain .exe. Windows may ask you to confirm before it runs.</p>
             </Reveal>
-            <Reveal className="glass app-window" delay={120}>
-              <div className="app-bar">
-                <i />
-                <i />
-                <i />
-                <span>PowerShare</span>
-              </div>
-              <div className="app-body">
-                <div className="app-gpu">
-                  <span>
-                    <b>NVIDIA GeForce RTX 3070</b>
-                    <small>8 GB &middot; Detected</small>
-                  </span>
-                  <span className="chip is-live">Contributing</span>
-                </div>
-                <div className="app-grid">
-                  <div className="app-tile">
-                    <small>GPU usage</small>
-                    <b>72%</b>
-                  </div>
-                  <div className="app-tile">
-                    <small>Time</small>
-                    <b>02:41:08</b>
-                  </div>
-                  <div className="app-tile">
-                    <small>Earned</small>
-                    <b className="up">$1.79</b>
-                  </div>
-                </div>
-                <div className="app-toggle">Stop contributing</div>
-              </div>
+            <Reveal className="app-window" delay={120}>
+              <AppMock />
             </Reveal>
           </div>
         </section>
@@ -338,23 +326,25 @@ export default function Home() {
         </section>
 
         {/* FINAL CTA + CONTACT */}
-        <section id="contact" className="container final">
-          <Reveal>
-            <p className="t-display">
-              Your GPU is idle.
-              <br />
-              <span className="t-accent">Put it to work.</span>
-            </p>
-          </Reveal>
-          <Reveal className="actions" delay={100}>
-            <DownloadButton />
-            <SignUpButton />
-          </Reveal>
-          <Reveal delay={160}>
-            <p className="contact-line">
-              Questions or feedback? Say hello at <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
-            </p>
-          </Reveal>
+        <section id="contact" className="band-ink">
+          <div className="container final">
+            <Reveal>
+              <p className="t-display">
+                Your GPU is idle.
+                <br />
+                <span className="mark">Put it to work.</span>
+              </p>
+            </Reveal>
+            <Reveal className="actions" delay={100}>
+              <DownloadButton />
+              <SignUpButton />
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="contact-line">
+                Questions or feedback? Say hello at <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
+              </p>
+            </Reveal>
+          </div>
         </section>
 
         <footer className="footer">

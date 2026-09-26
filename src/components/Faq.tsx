@@ -20,7 +20,7 @@ export function Faq({ items }: { items: readonly Item[] }) {
         const isOpen = open === i;
         return (
           <Reveal key={f.q} delay={i * 40}>
-            <div className={`glass faq-item${isOpen ? " is-open" : ""}`}>
+            <div className={`faq-item${isOpen ? " is-open" : ""}`}>
               <h3>
                 <button
                   type="button"

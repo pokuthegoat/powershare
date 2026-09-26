@@ -10,7 +10,7 @@ type Variant = "pill" | "button";
 export function AuthButton({ as = "pill" }: { as?: Variant }) {
   if (!PRIVY_APP_ID) {
     return (
-      <span className={as === "button" ? "btn btn-glass" : "pill"} aria-disabled="true">
+      <span className={as === "button" ? "btn btn-outline" : "pill"} aria-disabled="true">
         Sign up <span className="tag">Coming soon</span>
       </span>
     );
@@ -21,7 +21,7 @@ export function AuthButton({ as = "pill" }: { as?: Variant }) {
 // Rendered only inside <PrivyProvider> (see Providers.tsx), which is what makes usePrivy safe here.
 function PrivyAuthButton({ as }: { as: Variant }) {
   const { ready, authenticated, logout } = usePrivy();
-  const cls = as === "button" ? "btn btn-glass" : "pill";
+  const cls = as === "button" ? "btn btn-outline" : "pill";
 
   if (ready && authenticated) {
     return (

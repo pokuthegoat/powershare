@@ -18,7 +18,7 @@ export function DownloadIcon() {
   );
 }
 
-type Variant = "primary" | "white" | "glass";
+type Variant = "primary" | "outline";
 
 export function LinkButton({
   href,
@@ -42,7 +42,7 @@ export function LinkButton({
 }
 
 /** Download for Windows. The build isn't published yet, so by default this scrolls to the app section. */
-export function DownloadButton({ variant = "white", small }: { variant?: Variant; small?: boolean }) {
+export function DownloadButton({ variant = "primary", small }: { variant?: Variant; small?: boolean }) {
   return (
     <Link href={DOWNLOAD_URL} className={`btn btn-${variant}${small ? " btn-sm" : ""}`}>
       Download for Windows
@@ -51,7 +51,7 @@ export function DownloadButton({ variant = "white", small }: { variant?: Variant
   );
 }
 
-export const SignUpButton = ({ variant = "glass", small }: { variant?: Variant; small?: boolean }) => (
+export const SignUpButton = ({ variant = "outline", small }: { variant?: Variant; small?: boolean }) => (
   <LinkButton href="/signup" variant={variant} small={small}>
     Create account
   </LinkButton>
