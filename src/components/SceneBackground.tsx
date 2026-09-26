@@ -256,8 +256,8 @@ const PATH_DESKTOP: [number, number][] = [
   [0.44, 0.28],
   [0.76, 0.32],
   [0.86, 0.52], // about where the last shape (the cube) is reached, on the right, clear of the FAQ
-  [0.8, 0.76],
-  [0.8, 0.98], // the bottom of the page: the route carries on downward, so the blob sinks behind the closing black band
+  [0.72, 0.74],
+  [0.46, 0.98], // the bottom of the page: the route keeps sweeping (down and to the left) so the blob sinks behind the closing black band
 ];
 const PATH_MOBILE: [number, number][] = [
   [0.5, 0.3],
@@ -284,7 +284,10 @@ function sample(path: [number, number][], p: number): [number, number] {
   const p0 = path[Math.max(i - 1, 0)];
   const p1 = path[i];
   const p2 = path[i + 1];
-  const p3 = path[Math.min(i + 2, n - 1)];
+  // The last segment has no point after it. Repeating the final point (the usual trick) makes the curve slow to a crawl as
+  // it arrives, which reads as a kink; instead the route is carried on in the direction it was already heading, so it
+  // finishes at full speed like the rest of the path.
+  const p3: [number, number] = i + 2 < n ? path[i + 2] : [2 * p2[0] - p1[0], 2 * p2[1] - p1[1]];
   const at = (k: 0 | 1) =>
     0.5 *
     (2 * p1[k] +

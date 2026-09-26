@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE } from "@/lib/config";
 import { Providers } from "@/components/Providers";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 /** Headlines: Geist Sans (a variable font, so any weight is available), set light and tight. Body: Instrument Sans. Labels, numbers, nav and buttons: JetBrains Mono. */
 const display = Geist({ subsets: ["latin"], variable: "--font-display", display: "swap" });
@@ -31,12 +32,15 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <head>
+        {/* Runs before the page is drawn: tells the browser not to put you back where you had scrolled to after a refresh, so
+            the site always starts at the top (see ScrollToTop.tsx for the other half). */}
+        <script dangerouslySetInnerHTML={{ __html: `if ("scrollRestoration" in history) history.scrollRestoration = "manual";` }} />
+      </head>
       <body>
         <Providers>{children}</Providers>
+        <ScrollToTop />
         <SmoothScroll />
-        <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
       </body>
     </html>
   );

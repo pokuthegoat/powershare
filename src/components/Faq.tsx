@@ -19,7 +19,7 @@ export function Faq({ items }: { items: readonly Item[] }) {
       {items.map((f, i) => {
         const isOpen = open === i;
         return (
-          <Reveal key={f.q} delay={i * 40}>
+          <Reveal key={f.q}>
             <div className={`faq-item${isOpen ? " is-open" : ""}`}>
               <h3>
                 <button

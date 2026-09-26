@@ -103,22 +103,22 @@ export default function Home() {
                 </span>
                 <span className="badge">Windows app</span>
               </Reveal>
-              <Reveal as="h1" id="hero-title" className="t-display hero-title" delay={80}>
+              <Reveal as="h1" id="hero-title" className="t-display hero-title">
                 <span className="line">Your GPU is</span> <span className="line">sitting idle.</span>{" "}
                 <span className="line">
                   <span className="mark">Make it work.</span>
                 </span>
               </Reveal>
               <div className="hero-sub">
-                <Reveal as="p" className="t-lead" delay={200}>
+                <Reveal as="p" className="t-lead">
                   Download the app, connect your GPU and let it contribute while you&apos;re away. Earn points for
                   every minute, then cash them out for stocks.
                 </Reveal>
-                <Reveal className="hero-cta" delay={300}>
+                <Reveal className="hero-cta">
                   <DownloadButton />
                   <SignUpButton />
                 </Reveal>
-                <Reveal as="p" className="hero-note" delay={360}>
+                <Reveal as="p" className="hero-note">
                   Free to join. Your GPU has napped long enough.
                 </Reveal>
               </div>
@@ -140,7 +140,7 @@ export default function Home() {
                 <DownloadButton />
               </div>
             </Reveal>
-            <Reveal className="box progress-card" delay={120}>
+            <Reveal className="box progress-card">
               <div className="progress-top">
                 <span className="t-eyebrow">Your balance</span>
                 <span className="chip is-live">Contributing</span>
@@ -166,7 +166,7 @@ export default function Home() {
             <Reveal className="section-head">
               <span className="t-eyebrow section-num">02 &middot; What you can earn</span>
             </Reveal>
-            <Reveal as="h2" className="earn-giant" delay={80}>
+            <Reveal as="h2" className="earn-giant">
               <span className="earn-num">$1</span>
               <span className="earn-per">
                 every 90 minutes
@@ -174,7 +174,7 @@ export default function Home() {
                 your GPU is connected.
               </span>
             </Reveal>
-            <Reveal as="p" className="t-lead earn-lead" delay={160}>
+            <Reveal as="p" className="t-lead earn-lead">
               Earnings are simple and based on time: the longer your GPU is connected, the more you earn. No benchmarks,
               no tiers, no fees.
             </Reveal>
@@ -183,16 +183,16 @@ export default function Home() {
                 <span className="num">$16</span>
                 <p>For a full 24 hours of contributing</p>
               </Reveal>
-              <Reveal className="stat" delay={80}>
+              <Reveal className="stat">
                 <span className="num">$0</span>
                 <p>To join. You only need a Windows PC and a GPU</p>
               </Reveal>
-              <Reveal className="stat" delay={160}>
+              <Reveal className="stat">
                 <span className="num">1 pt</span>
                 <p>For every minute your GPU is connected. 90 points is worth $1</p>
               </Reveal>
             </div>
-            <Reveal delay={200}>
+            <Reveal>
               <p className="fine" style={{ marginTop: 20, maxWidth: 720 }}>
                 Payouts are reviewed and approved by the PowerShare team. Availability may vary by country.
               </p>
@@ -211,7 +211,7 @@ export default function Home() {
               </p>
             </Reveal>
           </div>
-          <Reveal className="marquee-wrap" delay={100}>
+          <Reveal className="marquee-wrap">
             <TickerMarquee />
           </Reveal>
         </section>
@@ -228,7 +228,7 @@ export default function Home() {
             </Reveal>
             <div className="steps">
               {STEPS.map((s, i) => (
-                <Reveal key={s.title} className="step" delay={i * 70}>
+                <Reveal key={s.title} className="step">
                   <span className="step-num">0{i + 1}</span>
                   <svg
                     className="step-icon"
@@ -269,7 +269,7 @@ export default function Home() {
                 You earn 1 point for every minute your GPU is connected, and 90 points is worth $1.
               </p>
             </Reveal>
-            <Reveal className="pay-table" delay={100}>
+            <Reveal className="pay-table">
               <div className="pay-row is-head">
                 <span>Connected</span>
                 <span>Points</span>
@@ -308,7 +308,7 @@ export default function Home() {
               </div>
               <p className="fine">The installer is a plain .exe. Windows may ask you to confirm before it runs.</p>
             </Reveal>
-            <Reveal className="app-window" delay={120}>
+            <Reveal className="app-window">
               <AppMock />
             </Reveal>
           </div>
@@ -335,11 +335,11 @@ export default function Home() {
                 <span className="mark">Put it to work.</span>
               </p>
             </Reveal>
-            <Reveal className="actions" delay={100}>
+            <Reveal className="actions">
               <DownloadButton />
               <SignUpButton />
             </Reveal>
-            <Reveal delay={160}>
+            <Reveal>
               <p className="contact-line">
                 Questions or feedback? Say hello at <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
               </p>

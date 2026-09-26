@@ -240,18 +240,7 @@ span.pill:hover { background: var(--white); color: var(--ink); }
 
 .page { position: relative; z-index: 1; }
 
-/* ---------- Reveal-on-scroll ---------- */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-  transition-delay: var(--d, 0ms);
-}
-.reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-}
+/* No scroll-in animation: content is simply there. (`.reveal` is now only a structural wrapper, see Reveal.tsx.) */
 
 /* ---------- Nav ---------- */
 
