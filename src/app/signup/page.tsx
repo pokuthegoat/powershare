@@ -4,8 +4,8 @@ import { SceneBackground } from "@/components/SceneBackground";
 import { AuthPage } from "@/components/AuthPage";
 
 export const metadata: Metadata = {
-  title: "Sign up | PowerShare",
-  description: "Create your PowerShare account, then sign in to the app with it.",
+  title: "Sign up | SubPad",
+  description: "Create your SubPad account by connecting your wallet.",
 };
 
 export default function SignUp() {

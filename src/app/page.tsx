@@ -3,86 +3,89 @@ import { SceneBackground } from "@/components/SceneBackground";
 import { Reveal } from "@/components/Reveal";
 import { Logo } from "@/components/Logo";
 import { Faq } from "@/components/Faq";
-import { DownloadButton, SignUpButton } from "@/components/Buttons";
-import { AppMock } from "@/components/AppMock";
+import { LaunchButton, ClaimButton } from "@/components/Buttons";
+import { EscrowMock } from "@/components/EscrowMock";
 import { TickerMarquee } from "@/components/TickerMarquee";
 import { SITE } from "@/lib/config";
 
 const STEPS = [
   {
-    title: "Download",
-    body: "Get the PowerShare app for Windows. It installs in a minute.",
-    icon: (
-      <path d="M12 3v11m0 0-4-4m4 4 4-4M4 20h16" />
-    ),
-  },
-  {
-    title: "Connect",
-    body: "Sign in with your PowerShare account. The app detects your GPU on its own.",
-    icon: (
-      <>
-        <rect x="3" y="7" width="18" height="10" rx="2" />
-        <path d="M7 17v3M12 17v3M17 17v3M8 11h4" />
-      </>
-    ),
-  },
-  {
-    title: "Contribute",
-    body: "Press Start whenever your GPU is idle. Press Stop any time you need it back.",
+    title: "Launch",
+    body: "Pick any subreddit and launch a coin for it. No mods, no permission, nobody has to say yes.",
     icon: <path d="m13 3-8 11h6l-1 7 8-11h-6l1-7Z" />,
   },
   {
-    title: "Earn",
-    body: "Points add up for every minute your GPU is connected. Watch them grow in the app.",
+    title: "Trade",
+    body: "Every buy and sell pays a small tax, held in escrow tied to that one subreddit.",
     icon: (
       <>
-        <circle cx="12" cy="12" r="8" />
-        <path d="M12 8v8M9.5 10.2c0-1 1-1.7 2.5-1.7s2.5.7 2.5 1.7-1 1.6-2.5 1.8-2.5.8-2.5 1.8 1 1.7 2.5 1.7 2.5-.7 2.5-1.7" />
+        <path d="M4 8h13M13 4l4 4-4 4" />
+        <path d="M20 16H7M11 12l-4 4 4 4" />
       </>
     ),
   },
   {
-    title: "Cash out",
-    body: "Request a payout from the app. Our team reviews it and pays you in stocks.",
-    icon: <path d="m4 16 5-5 4 4 7-8M15 7h5v5" />,
+    title: "Verify",
+    body: "A mod posts a short code somewhere only a mod can edit, proving they actually run the sub.",
+    icon: (
+      <>
+        <path d="M12 3l7 3v5c0 5-3.2 7.7-7 9-3.8-1.3-7-4-7-9V6l7-3Z" />
+        <path d="m9 12 2 2 4-4" />
+      </>
+    ),
+  },
+  {
+    title: "Claim",
+    body: "Once verified, request a payout whenever you want. No waiting on anyone's schedule.",
+    icon: (
+      <>
+        <rect x="3" y="7" width="18" height="12" rx="1" />
+        <path d="M3 10h18M7 15h4" />
+      </>
+    ),
+  },
+  {
+    title: "Spend",
+    body: "Funds land in a wallet as real ETH — hosting, contest prizes, whatever the community needs.",
+    icon: <path d="M12 21s-7-4.35-9.5-9C.5 7.5 3 3 7 3c2 0 3.8 1 5 2.5C13.2 4 15 3 17 3c4 0 6.5 4.5 4.5 9-2.5 4.65-9.5 9-9.5 9Z" />,
   },
 ];
 
-const PAY_ROWS = [
-  { time: "1.5 hours", amount: "$1.00", points: "90 pts" },
-  { time: "3 hours", amount: "$2.00", points: "180 pts" },
-  { time: "8 hours", amount: "$5.33", points: "480 pts" },
-  { time: "24 hours", amount: "$16.00", points: "1,440 pts" },
+const TAX_ROWS = [
+  { tax: "1%", per1k: "$10", per10k: "$100" },
+  { tax: "3%", per1k: "$30", per10k: "$300" },
+  { tax: "5%", per1k: "$50", per10k: "$500" },
+  { tax: "10%", per1k: "$100", per10k: "$1,000" },
 ];
 
 const FAQ = [
   {
-    q: "What is PowerShare?",
-    a: "PowerShare lets you put your PC's idle graphics card to use. You install the app, connect your GPU, and earn points for the time it's contributing. Points can be cashed out as stocks.",
+    q: "What is SubPad?",
+    a: "SubPad lets anyone launch a coin for any subreddit. Trading fees build up in escrow tied to that subreddit, and the subreddit's own mods can verify and claim them.",
   },
   {
-    q: "How much can I earn?",
-    a: "Every 90 minutes your GPU is connected earns $1. A full day connected adds up to $16. There's no fee to join, and you never pay to earn.",
+    q: "Do I need permission from the subreddit to launch a coin?",
+    a: "No. Anyone can launch a coin for any subreddit, at any time. You pay the launch fee and gas yourself, and you can't route any of the fees to yourself.",
   },
   {
-    q: "Do I need a powerful GPU?",
-    a: "A dedicated graphics card on a Windows PC is all you need. Virtual and basic display adapters aren't supported.",
+    q: "How do mods prove they run the subreddit?",
+    a: "We give you a short code. Post it somewhere only a moderator can edit — the sidebar, the description, or a stickied post — and we check it against Reddit's public moderator list.",
   },
   {
-    q: "Can I still use my PC?",
-    a: "Of course, it's your PC. Press Stop any time and your GPU is yours again. Start it again whenever it's idle.",
+    q: "How do mods actually get paid?",
+    a: "Once verified, click \"Claim fees\" to request a payout. We send it as ETH to your connected wallet the next time we're online — it's a manual, reviewed payout, not an instant automatic one.",
   },
   {
-    q: "How do I get paid?",
-    a: "Request a cash-out from the app once you've built up enough points. Payouts are reviewed and paid by the PowerShare team, so they aren't instant.",
+    q: "Is the money safe?",
+    a: "The trading and escrow happen on Pons v2, a public protocol — SubPad doesn't build or control that part. We do hold the wallet that fees collect into before a claim, so claiming is a reviewed payout from us, not a fully trustless on-chain withdrawal. Coins themselves can also lose all their value.",
   },
   {
-    q: "Which stocks can I get?",
-    a: "Popular names like NVIDIA, Apple, Tesla, Amazon, Alphabet and Microsoft. The list can change over time.",
+    q: "What happens if a subreddit's mods never verify?",
+    a: "The fees just sit there. Nothing expires, nothing gets swept, nothing goes to anyone else.",
   },
   {
-    q: "Is it free? Do I need an account?",
-    a: "It's free. Create an account on this site by connecting your wallet, then sign in to the app with the same wallet. One account per person.",
+    q: "Where does trading actually happen?",
+    a: "On Pons v2's own page for that coin. SubPad doesn't build a chart or a buy/sell widget — we link straight to it.",
   },
 ];
 
@@ -99,115 +102,113 @@ export default function Home() {
             <div className="hero-left">
               <Reveal className="hero-badges">
                 <span className="badge">
-                  <i /> GPU power for stocks
+                  <i /> Built on Pons v2
                 </span>
-                <span className="badge">Windows app</span>
+                <span className="badge">Any subreddit</span>
               </Reveal>
               <Reveal as="h1" id="hero-title" className="t-display hero-title">
-                <span className="line">Your GPU is</span> <span className="line">sitting idle.</span>{" "}
+                <span className="line">Every subreddit</span> <span className="line">has a price</span>{" "}
                 <span className="line">
-                  <span className="mark">Make it work.</span>
+                  <span className="mark">nobody&apos;s claimed.</span>
                 </span>
               </Reveal>
               <div className="hero-sub">
                 <Reveal as="p" className="t-lead">
-                  Download the app, connect your GPU and let it contribute while you&apos;re away. Earn points for
-                  every minute, then cash them out for stocks.
+                  Launch a coin for any subreddit. Every trade pays a fee into escrow for that community — its mods
+                  verify and claim it, whenever they want.
                 </Reveal>
                 <Reveal className="hero-cta">
-                  <DownloadButton />
-                  <SignUpButton />
+                  <LaunchButton />
+                  <ClaimButton />
                 </Reveal>
                 <Reveal as="p" className="hero-note">
-                  Free to join. Your GPU has napped long enough.
+                  No permission needed to start. No mods required.
                 </Reveal>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 01 START */}
+        {/* 01 LAUNCH */}
         <section id="start" className="section">
           <div className="container split">
             <Reveal className="split-text">
-              <span className="t-eyebrow section-num">01 &middot; Start</span>
-              <p className="t-h1">Turn idle hours into a portfolio.</p>
+              <span className="t-eyebrow section-num">01 &middot; Launch</span>
+              <p className="t-h1">Every subreddit can have a coin.</p>
               <p className="t-lead t-muted">
-                Your graphics card does nothing most of the day. PowerShare gives those hours a job, and every
-                connected minute adds to your balance.
+                You don&apos;t need to run it, know the mods, or ask anyone. Pick a subreddit, launch a coin, and its
+                trading fees start building up in escrow from the first trade.
               </p>
               <div className="hero-cta">
-                <DownloadButton />
+                <LaunchButton />
               </div>
             </Reveal>
             <Reveal className="box progress-card">
               <div className="progress-top">
-                <span className="t-eyebrow">Your balance</span>
-                <span className="chip is-live">Contributing</span>
+                <span className="t-eyebrow">r/nba escrow</span>
+                <span className="chip is-live">Trading</span>
               </div>
               <p className="progress-amount">
-                $6.40 <small>/ $10.00 payout</small>
+                0.0412 ETH <small>waiting to be claimed</small>
               </p>
-              <div className="bar" role="img" aria-label="64 percent of the way to a payout">
-                <span style={{ width: "64%" }} />
-              </div>
               <div className="progress-meta">
-                <span>9.6 hours connected</span>
+                <span>214 trades &middot; 3% creator tax</span>
                 <span>Example</span>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* 02 WHAT YOU CAN EARN */}
-        {/* The page's one big beat: a full-width black band with an oversized number. */}
+        {/* 02 WHERE THE FEES GO */}
         <section id="what-you-can-earn" className="band-ink band-earn">
           <div className="container earn-inner">
             <Reveal className="section-head">
-              <span className="t-eyebrow section-num">02 &middot; What you can earn</span>
+              <span className="t-eyebrow section-num">02 &middot; Where the fees go</span>
             </Reveal>
             <Reveal as="h2" className="earn-giant">
-              <span className="earn-num">$1</span>
+              <span className="earn-num">0%</span>
               <span className="earn-per">
-                every 90 minutes
+                of the fees go to
                 <br />
-                your GPU is connected.
+                whoever launches the coin.
               </span>
             </Reveal>
             <Reveal as="p" className="t-lead earn-lead">
-              Earnings are simple and based on time: the longer your GPU is connected, the more you earn. No benchmarks,
-              no tiers, no fees.
+              Every trade&apos;s creator tax goes straight into escrow for the subreddit itself — never to the person
+              who started the coin. Nobody, including SubPad, can spend it before a verified mod claims it.
             </Reveal>
             <div className="stats">
               <Reveal className="stat">
-                <span className="num">$16</span>
-                <p>For a full 24 hours of contributing</p>
+                <span className="num">10%</span>
+                <p>Maximum creator tax on every trade, fixed the moment a coin launches</p>
               </Reveal>
               <Reveal className="stat">
-                <span className="num">$0</span>
-                <p>To join. You only need a Windows PC and a GPU</p>
+                <span className="num">0</span>
+                <p>Permission needed from a subreddit before someone can launch a coin for it</p>
               </Reveal>
               <Reveal className="stat">
-                <span className="num">1 pt</span>
-                <p>For every minute your GPU is connected. 90 points is worth $1</p>
+                <span className="num">1</span>
+                <p>Escrow address per subreddit, so fees never mix with another coin&apos;s</p>
               </Reveal>
             </div>
             <Reveal>
               <p className="fine" style={{ marginTop: 20, maxWidth: 720 }}>
-                Payouts are reviewed and approved by the PowerShare team. Availability may vary by country.
+                Trading and escrow run on Pons v2, a public protocol on Robinhood Chain. Availability may vary by
+                country.
               </p>
             </Reveal>
           </div>
         </section>
 
-        {/* 03 WHAT YOU BUILD TOWARD */}
+        {/* 03 A TREASURY, NOT JUST A TOKEN */}
         <section id="what-you-build" className="section tight">
           <div className="container">
             <Reveal className="section-head">
-              <span className="t-eyebrow section-num">03 &middot; What you build toward</span>
-              <p className="t-h1">Stocks, not just points.</p>
+              <span className="t-eyebrow section-num">03 &middot; What it&apos;s for</span>
+              <p className="t-h1">A treasury, not just a token.</p>
               <p className="t-lead t-muted">
-                Points are a stepping stone. Cash them out for shares in companies you already know.
+                Claimed fees are real ETH in a mod-controlled wallet — server and bot hosting, contest prizes,
+                charity drives the sub already runs, whatever the community needs.
               </p>
             </Reveal>
           </div>
@@ -221,9 +222,9 @@ export default function Home() {
           <div className="container">
             <Reveal className="section-head">
               <span className="t-eyebrow section-num">04 &middot; How it works</span>
-              <p className="t-h1">Five steps from idle to paid.</p>
+              <p className="t-h1">Five steps from launch to spent.</p>
               <p className="t-lead t-muted">
-                Download &rarr; Connect GPU &rarr; Contribute &rarr; Earn. Then cash out when you&apos;re ready.
+                Launch &rarr; Trade &rarr; Verify &rarr; Claim. Then spend it on the community.
               </p>
             </Reveal>
             <div className="steps">
@@ -250,11 +251,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* A line with some attitude between the sections. */}
         <section className="interlude" aria-label="A word from us">
           <div className="container">
             <Reveal as="p" className="interlude-line">
-              Sleep is for people. <span>Graphics cards work in shifts.</span>
+              Nobody asked your subreddit&apos;s permission. <span>Someone was going to trade it eventually.</span>
             </Reveal>
           </div>
         </section>
@@ -264,52 +264,52 @@ export default function Home() {
           <div className="container">
             <Reveal className="section-head">
               <span className="t-eyebrow section-num">05 &middot; What it pays</span>
-              <p className="t-h1">One rate. Easy to follow.</p>
+              <p className="t-h1">The tax rate decides the pace.</p>
               <p className="t-lead t-muted">
-                You earn 1 point for every minute your GPU is connected, and 90 points is worth $1.
+                The creator tax is set once, at launch, between 0% and 10%. A higher tax raises more per trade, but
+                can slow down trading.
               </p>
             </Reveal>
             <Reveal className="pay-table">
               <div className="pay-row is-head">
-                <span>Connected</span>
-                <span>Points</span>
-                <span>You earn</span>
+                <span>Creator tax</span>
+                <span>Per $1,000 traded</span>
+                <span>Per $10,000 traded</span>
               </div>
-              {PAY_ROWS.map((r) => (
-                <div className="pay-row" key={r.time}>
-                  <b>{r.time}</b>
-                  <span>{r.points}</span>
-                  <span className="amt">{r.amount}</span>
+              {TAX_ROWS.map((r) => (
+                <div className="pay-row" key={r.tax}>
+                  <b>{r.tax}</b>
+                  <span>{r.per1k}</span>
+                  <span className="amt">{r.per10k}</span>
                 </div>
               ))}
             </Reveal>
           </div>
         </section>
 
-        {/* 06 THE APP */}
+        {/* 06 TRADING HAPPENS ON PONS */}
         <section id="the-app" className="section">
           <div className="container split">
             <Reveal className="split-text">
-              <span className="t-eyebrow section-num">06 &middot; The app</span>
-              <p className="t-h1">Everything happens in the app.</p>
+              <span className="t-eyebrow section-num">06 &middot; Trading</span>
+              <p className="t-h1">Trading happens on Pons.</p>
               <p className="t-lead t-muted">
-                The PowerShare app for Windows detects your GPU, connects it to your account and lets you start or stop
-                contributing with one click. See your GPU usage, your contribution time and what you&apos;ve earned at a
-                glance.
+                We don&apos;t build a chart or a buy/sell screen. Every coin trades on Pons v2&apos;s own page, with
+                its own live chart. SubPad handles the part that matters for the subreddit: escrow and claiming.
               </p>
               <ul className="req-list">
-                <li>Windows 10 or 11 (64-bit)</li>
-                <li>A dedicated NVIDIA, AMD or Intel graphics card</li>
-                <li>A PowerShare account (free, created on this site)</li>
+                <li>Built on Pons v2, live on Robinhood Chain</li>
+                <li>Each subreddit gets its own dedicated escrow address</li>
+                <li>Nobody can spend it before a verified mod claims it</li>
               </ul>
               <div className="hero-cta">
-                <DownloadButton />
-                <SignUpButton />
+                <LaunchButton />
+                <ClaimButton />
               </div>
-              <p className="fine">The installer is a plain .exe. Windows may ask you to confirm before it runs.</p>
+              <p className="fine">Charts, liquidity and swaps are handled entirely by Pons v2 — SubPad never touches them.</p>
             </Reveal>
             <Reveal className="app-window">
-              <AppMock />
+              <EscrowMock />
             </Reveal>
           </div>
         </section>
@@ -330,14 +330,14 @@ export default function Home() {
           <div className="container final">
             <Reveal>
               <p className="t-display">
-                Your GPU is idle.
+                Your subreddit has a price.
                 <br />
-                <span className="mark">Put it to work.</span>
+                <span className="mark">Someone should claim it.</span>
               </p>
             </Reveal>
             <Reveal className="actions">
-              <DownloadButton />
-              <SignUpButton />
+              <LaunchButton />
+              <ClaimButton />
             </Reveal>
             <Reveal>
               <p className="contact-line">
@@ -351,7 +351,7 @@ export default function Home() {
           <div className="container footer-inner">
             <Logo />
             <span>{SITE.tagline}</span>
-            <span>&copy; {new Date().getFullYear()} PowerShare</span>
+            <span>&copy; {new Date().getFullYear()} SubPad</span>
           </div>
         </footer>
       </main>

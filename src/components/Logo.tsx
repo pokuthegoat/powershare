@@ -17,10 +17,10 @@ export function Logo({ large = false }: { large?: boolean }) {
     if (!smoothScrollTo(0)) window.scrollTo({ top: 0, behavior: "auto" });
   };
   return (
-    <Link href="/" className={`logo${large ? " is-lg" : ""}`} aria-label="PowerShare home" onClick={onClick}>
+    <Link href="/" className={`logo${large ? " is-lg" : ""}`} aria-label="SubPad home" onClick={onClick}>
       {/* eslint-disable-next-line @next/next/no-img-element -- a tiny SVG mark */}
       <img className="logo-mark" src="/logo.svg" alt="" width={64} height={64} />
-      PowerShare
+      SubPad
     </Link>
   );
 }

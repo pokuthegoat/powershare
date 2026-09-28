@@ -13,12 +13,12 @@ const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variab
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: "PowerShare: Your GPU is sitting idle. Make it work.",
+  title: "SubPad: coins for the subreddits you're already in.",
   description:
-    "Download the PowerShare app, connect your GPU, contribute while it's idle and earn rewards you can cash out for stocks.",
+    "Launch a coin for any subreddit. Trading fees build up in escrow, and the subreddit's mods claim them once they verify.",
   openGraph: {
-    title: "PowerShare",
-    description: "Your GPU is sitting idle. Make it work. GPU power for stocks.",
+    title: "SubPad",
+    description: "Coins for the subreddits you're already in.",
     type: "website",
   },
 };

@@ -4,8 +4,8 @@ import { SceneBackground } from "@/components/SceneBackground";
 import { AuthPage } from "@/components/AuthPage";
 
 export const metadata: Metadata = {
-  title: "Log in | PowerShare",
-  description: "Log in to your PowerShare account.",
+  title: "Log in | SubPad",
+  description: "Log in to your SubPad account.",
 };
 
 export default function LogIn() {
