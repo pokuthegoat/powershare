@@ -40,8 +40,34 @@ export function LaunchForm() {
 }
 
 function Gated() {
-  const { ready, authenticated } = usePrivy();
+  const { ready, authenticated, logout } = usePrivy();
+  const { wallets, ready: walletsReady } = useWallets();
+
   if (!ready || !authenticated) return <ConnectGate />;
+  if (!walletsReady) {
+    return (
+      <div className="box form-card">
+        <h1>Launch a coin</h1>
+        <button type="button" className="btn btn-primary" disabled>
+          Loading your wallet…
+        </button>
+      </div>
+    );
+  }
+  if (wallets.length === 0) {
+    return (
+      <div className="box form-card">
+        <h1>Launch a coin</h1>
+        <p className="t-lead">
+          You&apos;re signed in, but no wallet is actually connected right now — that can happen if your wallet
+          extension got locked or disconnected after you last logged in. Log out and reconnect to fix it.
+        </p>
+        <button type="button" className="btn btn-primary" onClick={() => void logout()}>
+          Log out
+        </button>
+      </div>
+    );
+  }
   return <LaunchFields />;
 }
 
