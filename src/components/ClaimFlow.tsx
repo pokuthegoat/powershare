@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { formatEther, type Hex } from "viem";
 import { PRIVY_APP_ID } from "@/lib/config";
 import { PONS_FEE_ESCROW_ABI, PONS_FEE_ESCROW_ADDRESS, ponsPublicClient } from "@/lib/pons";
@@ -47,12 +47,40 @@ export function ClaimFlow() {
 }
 
 type Escrow = { state: "loading" } | { state: "ready"; address: Hex; balanceEth: number } | { state: "error"; message: string };
+type Submit = { state: "idle" } | { state: "submitting" } | { state: "error"; message: string };
 
 function ClaimSteps() {
+  const { wallets } = useWallets();
+  const wallet = wallets[0];
+
   const [step, setStep] = useState<Step>("subreddit");
   const [subreddit, setSubreddit] = useState("");
+  const [redditUsername, setRedditUsername] = useState("");
   const [code] = useState(randomCode);
   const [escrow, setEscrow] = useState<Escrow>({ state: "loading" });
+  const [submit, setSubmit] = useState<Submit>({ state: "idle" });
+
+  async function requestClaim() {
+    if (escrow.state !== "ready" || !wallet) return;
+    setSubmit({ state: "submitting" });
+    try {
+      const res = await fetch("/api/claim-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subreddit,
+          redditUsername,
+          verificationCode: code,
+          escrowAddress: escrow.address,
+          payoutWallet: wallet.address,
+        }),
+      });
+      if (!res.ok) throw new Error("Couldn't submit the claim request. Try again in a moment.");
+      setStep("requested");
+    } catch (err) {
+      setSubmit({ state: "error", message: err instanceof Error ? err.message : "Couldn't submit the claim request." });
+    }
+  }
 
   useEffect(() => {
     if (step !== "claim") return;
@@ -82,7 +110,8 @@ function ClaimSteps() {
         <span className="t-eyebrow section-num">Claim</span>
         <h1 style={{ marginTop: 10 }}>Which subreddit do you moderate?</h1>
         <p className="t-lead" style={{ marginTop: 10 }}>
-          We&apos;ll give you a short code to prove it, then check it against Reddit&apos;s public moderator list.
+          We&apos;ll give you a short code to prove it. A real person checks it against the subreddit&apos;s public
+          moderator list before any payout goes out — not an automated check.
         </p>
         <div className="field" style={{ marginTop: 4 }}>
           <label htmlFor="mod-subreddit">Subreddit</label>
@@ -97,8 +126,22 @@ function ClaimSteps() {
             />
           </div>
         </div>
-        <button type="button" className="btn btn-primary" disabled={!subreddit} onClick={() => setStep("verify")}>
-          Generate verification code
+        <div className="field">
+          <label htmlFor="reddit-username">Your Reddit username</label>
+          <div className="input-prefix">
+            <span>u/</span>
+            <input
+              id="reddit-username"
+              className="input"
+              placeholder="username"
+              value={redditUsername}
+              onChange={(e) => setRedditUsername(e.target.value.replace(/^u\//i, ""))}
+            />
+          </div>
+          <span className="field-hint">So we know which account on the moderator list to check for.</span>
+        </div>
+        <button type="button" className="btn btn-primary" disabled={!subreddit || !redditUsername} onClick={() => setStep("verify")}>
+          Get a verification code
         </button>
       </div>
     );
@@ -118,12 +161,14 @@ function ClaimSteps() {
         </div>
         <div className="auth-step">
           <b>2</b>
-          <span>We check that the code is there, and that your Reddit account is on the subreddit&apos;s public moderator list.</span>
+          <span>
+            When you request the claim, it goes into a queue. Before anything is sent, someone manually checks that
+            the code is there and that u/{redditUsername} is really on r/{subreddit}&apos;s public moderator list.
+          </span>
         </div>
         <button type="button" className="btn btn-primary" onClick={() => setStep("claim")}>
-          I&apos;ve added it — verify
+          I&apos;ve added it — continue
         </button>
-        <p className="form-note">Reddit verification isn&apos;t wired up yet — this preview skips straight to a verified state.</p>
       </div>
     );
   }
@@ -131,7 +176,7 @@ function ClaimSteps() {
   if (step === "claim") {
     return (
       <div className="box form-card">
-        <span className="auth-ok">Verified as a mod of r/{subreddit}</span>
+        <span className="t-eyebrow section-num">Claim &middot; r/{subreddit}</span>
         <h1>Fees waiting for r/{subreddit}.</h1>
         <div className="box progress-card" style={{ border: "1px solid var(--line)" }}>
           <div className="progress-top">
@@ -148,10 +193,11 @@ function ClaimSteps() {
           {escrow.state === "loading" && <p className="progress-amount">Reading live…</p>}
           {escrow.state === "error" && <p className="form-note">{escrow.message}</p>}
         </div>
-        <button type="button" className="btn btn-primary" disabled={escrow.state !== "ready"} onClick={() => setStep("requested")}>
-          Claim fees
+        <button type="button" className="btn btn-primary" disabled={escrow.state !== "ready" || submit.state === "submitting"} onClick={requestClaim}>
+          {submit.state === "submitting" ? "Submitting…" : "Request claim"}
         </button>
-        <p className="form-note">We send claims manually the next time we&apos;re online, not instantly.</p>
+        {submit.state === "error" && <p className="form-note">{submit.message}</p>}
+        <p className="form-note">Someone checks u/{redditUsername} against r/{subreddit}&apos;s moderator list before sending anything — not instant.</p>
       </div>
     );
   }
@@ -159,10 +205,10 @@ function ClaimSteps() {
   return (
     <div className="box form-card">
       <span className="auth-ok">Request received</span>
-      <h1>We&apos;ll send it soon.</h1>
+      <h1>We&apos;ll review it soon.</h1>
       <p className="t-lead">
-        Your claim for r/{subreddit} is in the queue. We&apos;ll send the ETH to your connected wallet the next time
-        we&apos;re online.
+        Your claim for r/{subreddit} (as u/{redditUsername}) is in the queue. Once someone checks the code and the
+        moderator list, the ETH gets sent to your connected wallet.
       </p>
     </div>
   );
