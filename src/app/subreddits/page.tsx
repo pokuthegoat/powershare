@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/Nav";
 import { SceneBackground } from "@/components/SceneBackground";
-import { LaunchButton } from "@/components/Buttons";
+import { Dashboard } from "@/components/Dashboard";
 
 export const metadata: Metadata = {
   title: "Subreddits | SubPad",
-  description: "Browse subreddits with coins, ranked by fees earned.",
+  description: "Every coin launched, what's been paid out, and what's still sitting in escrow.",
 };
 
 export default function Subreddits() {
@@ -14,18 +14,14 @@ export default function Subreddits() {
       <SceneBackground dim />
       <Nav />
       <main className="form-page">
-        <div className="container">
-          <div className="box form-card placeholder-card">
+        <div className="container" style={{ maxWidth: 900 }}>
+          <div style={{ marginBottom: 28 }}>
             <span className="t-eyebrow section-num">Subreddits</span>
-            <h1>Browse &amp; leaderboard, coming soon.</h1>
-            <p className="t-lead">
-              Every subreddit with a coin, and a leaderboard ranked by fees earned, will live here once coins start
-              launching.
+            <p className="t-h1" style={{ marginTop: 10 }}>
+              What SubPad has generated.
             </p>
-            <div className="hero-cta">
-              <LaunchButton />
-            </div>
           </div>
+          <Dashboard />
         </div>
       </main>
     </>

@@ -143,6 +143,30 @@ A minor bug was introduced and fixed in the same pass: `LaunchForm`'s wallet-gat
 
 Launch still requires a connected wallet (unavoidable — it has to sign the actual on-chain transaction). Claim does not.
 
+**Payout mechanism decided and built, same session: manual, "like GameStock."** The user chose manual sending over automation. Before building it, confirmed the exact mechanics directly from `PonsV2FeeEscrow.sol`'s verified source: `function claim() external nonReentrant returns (uint256 amount) { amount = _claim(_balances[msg.sender]); }` — critically, **`claim()` pays out to `msg.sender`**, so the subreddit's own derived wallet must be the one calling it (not an arbitrary caller passing a recipient param). That means the real manual steps are: (1) import the subreddit's derived private key into a wallet, (2) send that wallet a small amount of ETH for gas, (3) call `claim()` on it from that wallet (e.g. via Blockscout's write-contract UI), which pays the accrued ETH to that same wallet, (4) send that ETH on to the mod's chosen payout wallet as an ordinary transfer.
+
+Built to support this:
+- `GET /api/admin/subreddit-key?subreddit=` — admin-only (same `requireAdmin` check as everything else in `/admin`), returns the subreddit's derived private key via the already-existing `subredditFeeRecipientPrivateKey()`.
+- `/admin` now has a "Show escrow private key" button per pending request, which reveals the key inline plus the 4-step instructions above and a direct link to the Fee Escrow contract's write-contract page on Blockscout.
+- Verified via curl (rejects unauthenticated requests, same as the other admin endpoints) and independently re-derived the key outside the app to confirm it resolves to the exact same address already used for r/nba throughout this session — the key genuinely controls the right funds, not just "looks right."
+
+This closes out the core loop's design — every piece of the intended flow (launch → trade elsewhere → claim → manual review → manual payout) now exists in some form. What's left is testing the money-moving paths for real (bridging ETH, an actual launch, an actual claim+payout) rather than new features.
+
+**Note (later in the session): the user asked for a "reveal escrow key per request" UI to be removed** from `/admin` right after this was built — wanted the per-request card to stay simple (just see the payout address, copy it, send money, mark paid), not have key-retrieval logic embedded in every row. `/api/admin/subreddit-key` and its UI were deleted. The underlying capability (`subredditFeeRecipientPrivateKey()`) still exists in `ponsRecipient.server.ts` for the next session to hand over ad hoc when the user actually needs a specific subreddit's key — just not built as a standing feature. Don't re-add per-request key UI without being asked again.
+
+## 8c. Dashboard feature (2026-09-28, same session)
+
+The user asked for a dashboard on `/subreddits` (replacing its placeholder): a PnL-style summary + a GitHub-style activity calendar (based on a reference screenshot of a crypto trading terminal's "Portfolio PnL" widget — dark theme, blue accents, rounded corners) plus a launch history list. Since SubPad takes no cut itself, "PnL" was reinterpreted as **treasury generated** (realized = paid to mods, unrealized = still sitting in escrow) rather than personal trading profit — stated as an assumption, not silently guessed. Kept the reference's information layout (total figure, stat breakdown, month calendar, streaks) but restyled entirely in SubPad's own light/mono/square design system, not the dark trading-terminal look.
+
+Built:
+- **`launches` table** (new) — records every successful launch (subreddit, name, symbol, token address, launcher wallet, tax, tx hash, when). Nothing recorded this before; Launch just fired the transaction and showed a success screen.
+- **`LaunchForm.tsx` now records launches.** Uses `publicClient.simulateContract()` before sending (not just `writeContract`) specifically to get the token address `launchToken()` returns — `writeContract` alone only gives a tx hash, not the return value. POSTs to `/api/launches` after a successful send.
+- **`claim_requests.amount_eth`** (new column) — `/admin`'s "Mark paid" now prompts for the actual amount sent (pre-filled with a live-read escrow balance shown in the same card, added while doing this — the pending card previously showed no balance at all), so payouts are recorded, not just marked.
+- **`GET /api/launches`** (public — launch data is inherently public on-chain anyway) and **`GET /api/stats`** (public, aggregate-only — total paid, total in escrow across every subreddit with a coin, launch/subreddit counts, per-day paid totals for the calendar). Deliberately separate from the admin-gated `/api/claim-requests` so the public dashboard never exposes Reddit usernames or individual payout wallets — only sums.
+- **`Dashboard.tsx`** — treasury summary card, a month calendar (built with plain `Date` math, UTC-based to match `datetime('now')`/`date()` in SQLite, no date library added), streak counters, and the launch history table.
+
+**Verified with real data, not just compiled:** inserted a real launch + a real paid claim with an amount directly into Turso, loaded the page, confirmed the totals, the correct calendar day highlighted with the right amount, correct streak math, and the launch history row — all matched — then deleted the test rows and confirmed the empty state also renders cleanly (all zeros, no errors).
+
 ## 9. How the user likes to work (carried over, still applies)
 
 - **"dnc" means "do not code": discuss only.** Do not write code until told to. This was in effect for the entirety of the planning conversation this brief summarizes — check whether it's still in effect at the start of the next session rather than assuming either way.

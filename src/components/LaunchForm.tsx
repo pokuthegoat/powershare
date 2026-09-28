@@ -108,13 +108,31 @@ function LaunchFields() {
         website: website || undefined,
       });
 
-      const hash = await walletClient.writeContract({
+      // Simulated first so we know the token address launchToken() will return — writeContract only gives a tx hash.
+      const { result, request } = await ponsPublicClient().simulateContract({
         address: PONS_FACTORY_ADDRESS,
         abi: PONS_FACTORY_ABI,
         functionName: "launchToken",
         args: [params, launchConfigId, pairToken],
         value: fee,
+        account: wallet.address as Hex,
       });
+
+      const hash = await walletClient.writeContract(request);
+
+      fetch("/api/launches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subreddit,
+          name,
+          symbol: ticker,
+          tokenAddress: result[0],
+          launcherWallet: wallet.address,
+          creatorTaxBps: Math.round(tax * 100),
+          txHash: hash,
+        }),
+      }).catch(() => {});
 
       setStatus({ state: "done", hash });
     } catch (err) {

@@ -25,4 +25,17 @@ export type ClaimRequest = {
   requested_at: string;
   paid_at: string | null;
   tx_hash: string | null;
+  amount_eth: number | null;
+};
+
+export type Launch = {
+  id: number;
+  subreddit: string;
+  name: string;
+  symbol: string;
+  token_address: string;
+  launcher_wallet: string;
+  creator_tax_bps: number;
+  tx_hash: string;
+  launched_at: string;
 };

@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePrivy, getIdentityToken } from "@privy-io/react-auth";
+import { formatEther, type Hex } from "viem";
 import { ADMIN_WALLET, PRIVY_APP_ID } from "@/lib/config";
+import { PONS_FEE_ESCROW_ABI, PONS_FEE_ESCROW_ADDRESS, ponsPublicClient } from "@/lib/pons";
 
 type ClaimRequest = {
   id: number;
@@ -15,6 +17,7 @@ type ClaimRequest = {
   requested_at: string;
   paid_at: string | null;
   tx_hash: string | null;
+  amount_eth: number | null;
 };
 
 function Gate() {
@@ -69,6 +72,7 @@ function RequestList() {
   const [requests, setRequests] = useState<ClaimRequest[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [payingId, setPayingId] = useState<number | null>(null);
+  const [balances, setBalances] = useState<Record<string, number>>({});
 
   const load = useCallback(async () => {
     setError(null);
@@ -80,20 +84,34 @@ function RequestList() {
     }
     const { requests } = (await res.json()) as { requests: ClaimRequest[] };
     setRequests(requests);
+
+    const client = ponsPublicClient();
+    const pendingAddresses = [...new Set(requests.filter((r) => r.status === "requested").map((r) => r.escrow_address))];
+    for (const address of pendingAddresses) {
+      client
+        .readContract({ address: PONS_FEE_ESCROW_ADDRESS, abi: PONS_FEE_ESCROW_ABI, functionName: "balanceOf", args: [address as Hex] })
+        .then((balance) => setBalances((prev) => ({ ...prev, [address]: Number(formatEther(balance)) })))
+        .catch(() => {});
+    }
   }, []);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  async function markPaid(id: number) {
+  async function markPaid(id: number, suggestedAmount: number | undefined) {
+    const amountInput = window.prompt(
+      `How much ETH did you send?${suggestedAmount !== undefined ? ` (escrow currently shows ${suggestedAmount} ETH)` : ""}`,
+      suggestedAmount !== undefined ? String(suggestedAmount) : "",
+    );
+    if (amountInput === null) return;
     const txHash = window.prompt("Optional: paste a transaction hash for the record, or leave blank.") ?? undefined;
     setPayingId(id);
     const idToken = await getIdentityToken();
     await fetch(`/api/claim-requests/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
-      body: JSON.stringify({ txHash: txHash || undefined }),
+      body: JSON.stringify({ txHash: txHash || undefined, amountEth: amountInput ? Number(amountInput) : undefined }),
     });
     setPayingId(null);
     load();
@@ -135,6 +153,10 @@ function RequestList() {
                   <span>{r.escrow_address}</span>
                 </div>
                 <div className="cost-row">
+                  <span>In escrow now</span>
+                  <span>{balances[r.escrow_address] !== undefined ? `${balances[r.escrow_address]} ETH` : "Reading live…"}</span>
+                </div>
+                <div className="cost-row">
                   <span>Payout wallet</span>
                   <span>{r.payout_wallet}</span>
                 </div>
@@ -148,7 +170,7 @@ function RequestList() {
                 className="btn btn-primary"
                 style={{ marginTop: 16 }}
                 disabled={payingId === r.id}
-                onClick={() => markPaid(r.id)}
+                onClick={() => markPaid(r.id, balances[r.escrow_address])}
               >
                 {payingId === r.id ? "Saving…" : "Mark paid"}
               </button>
@@ -166,6 +188,7 @@ function RequestList() {
                 r/{r.subreddit} &middot; u/{r.reddit_username}
               </span>
               <span className="t-muted">
+                {r.amount_eth !== null ? `${r.amount_eth} ETH · ` : ""}
                 paid {r.paid_at}
                 {r.tx_hash ? ` · ${r.tx_hash}` : ""}
               </span>
