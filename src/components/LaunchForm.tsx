@@ -57,6 +57,8 @@ function LaunchFields() {
   const [description, setDescription] = useState("");
   const [tax, setTax] = useState(DEFAULT_CREATOR_TAX);
   const [imageName, setImageName] = useState<string | null>(null);
+  const [twitter, setTwitter] = useState("");
+  const [website, setWebsite] = useState("");
   const [launchFee, setLaunchFee] = useState<bigint | null>(null);
   const [status, setStatus] = useState<Status>({ state: "idle" });
 
@@ -102,6 +104,8 @@ function LaunchFields() {
         description,
         creatorFeeRecipient,
         creatorTaxBps: Math.round(tax * 100),
+        twitter: twitter || undefined,
+        website: website || undefined,
       });
 
       const hash = await walletClient.writeContract({
@@ -215,6 +219,29 @@ function LaunchFields() {
             {imageName ?? "Square image, click to choose"}
           </label>
           <span className="field-hint">Image hosting isn&apos;t wired up yet — the coin launches without one for now.</span>
+        </div>
+
+        <div className="field-row">
+          <div className="field">
+            <label htmlFor="twitter">Twitter / X (optional)</label>
+            <input
+              id="twitter"
+              className="input"
+              placeholder="https://x.com/..."
+              value={twitter}
+              onChange={(e) => setTwitter(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="website">Website (optional)</label>
+            <input
+              id="website"
+              className="input"
+              placeholder="https://..."
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="field">
