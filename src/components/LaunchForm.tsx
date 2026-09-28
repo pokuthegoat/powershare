@@ -60,13 +60,18 @@ function LaunchFields() {
   const [twitter, setTwitter] = useState("");
   const [website, setWebsite] = useState("");
   const [launchFee, setLaunchFee] = useState<bigint | null>(null);
+  const [launchFeeError, setLaunchFeeError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ state: "idle" });
 
   useEffect(() => {
     ponsPublicClient()
       .readContract({ address: PONS_FACTORY_ADDRESS, abi: PONS_FACTORY_ABI, functionName: "launchFee" })
       .then(setLaunchFee)
-      .catch(() => setLaunchFee(null));
+      .catch((err) => {
+        setLaunchFee(null);
+        setLaunchFeeError(err instanceof Error ? err.message : "Couldn't read the live launch fee.");
+        console.error("launchFee read failed:", err);
+      });
   }, []);
 
   const launchFeeEth = launchFee !== null ? Number(formatEther(launchFee)) : null;
@@ -288,7 +293,7 @@ function LaunchFields() {
           </div>
           <div className="cost-row">
             <span>Launch fee</span>
-            <span>{launchFeeEth !== null ? `${launchFeeEth} ETH` : "Reading live…"}</span>
+            <span>{launchFeeEth !== null ? `${launchFeeEth} ETH` : launchFeeError ? "Failed to read" : "Reading live…"}</span>
           </div>
           <div className="cost-row">
             <span>Estimated gas</span>
@@ -304,6 +309,7 @@ function LaunchFields() {
           {status.state === "submitting" ? "Confirm in your wallet…" : "Launch coin"}
         </button>
         {status.state === "error" && <p className="form-note">{status.message}</p>}
+        {launchFeeError && <p className="form-note">Couldn&apos;t read the live launch fee, so launching is disabled: {launchFeeError}</p>}
       </form>
     </div>
   );
