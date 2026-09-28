@@ -82,7 +82,7 @@ function LaunchFields() {
   const [ticker, setTicker] = useState("");
   const [description, setDescription] = useState("");
   const [tax, setTax] = useState(DEFAULT_CREATOR_TAX);
-  const [imageName, setImageName] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [twitter, setTwitter] = useState("");
   const [website, setWebsite] = useState("");
   const [launchFee, setLaunchFee] = useState<bigint | null>(null);
@@ -121,6 +121,16 @@ function LaunchFields() {
       }
       const { address: creatorFeeRecipient } = (await recipientRes.json()) as { address: Hex };
 
+      let logo = "";
+      if (imageFile) {
+        const formData = new FormData();
+        formData.set("file", imageFile);
+        const uploadRes = await fetch("/api/logo", { method: "POST", body: formData });
+        if (!uploadRes.ok) throw new Error("Couldn't upload the image. Try a smaller file or a different format.");
+        const { url } = (await uploadRes.json()) as { url: string };
+        logo = new URL(url, window.location.origin).toString();
+      }
+
       await wallet.switchChain(robinhoodChain.id);
       const provider = await wallet.getEthereumProvider();
       const walletClient = createWalletClient({
@@ -137,6 +147,7 @@ function LaunchFields() {
         creatorTaxBps: Math.round(tax * 100),
         twitter: twitter || undefined,
         website: website || undefined,
+        logo: logo || undefined,
       });
 
       // Simulated first so we know the token address launchToken() will return — writeContract only gives a tx hash.
@@ -257,17 +268,17 @@ function LaunchFields() {
         </div>
 
         <div className="field">
-          <label htmlFor="image">Image</label>
+          <label htmlFor="image">Image (optional)</label>
           <label className="upload">
             <input
               id="image"
               type="file"
-              accept="image/*"
-              onChange={(e) => setImageName(e.target.files?.[0]?.name ?? null)}
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
             />
-            {imageName ?? "Square image, click to choose"}
+            {imageFile?.name ?? "Square image, click to choose"}
           </label>
-          <span className="field-hint">Image hosting isn&apos;t wired up yet — the coin launches without one for now.</span>
+          <span className="field-hint">PNG, JPEG, WebP or GIF, up to 2MB.</span>
         </div>
 
         <div className="field-row">

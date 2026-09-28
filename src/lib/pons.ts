@@ -47,6 +47,7 @@ export type LaunchCoinInput = {
   creatorTaxBps: number;
   twitter?: string;
   website?: string;
+  logo?: string;
 };
 
 /**
@@ -70,8 +71,7 @@ export async function prepareLaunch(input: LaunchCoinInput) {
   const params = {
     name: input.name,
     symbol: input.symbol,
-    // Image hosting isn't wired up yet — launches go out with no logo until that exists.
-    logo: "",
+    logo: input.logo ?? "",
     description: input.description,
     socials: { twitter: input.twitter ?? "", telegram: "", discord: "", website: input.website ?? "", farcaster: "" },
     creatorFeeRecipient: input.creatorFeeRecipient,
