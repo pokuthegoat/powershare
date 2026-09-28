@@ -139,6 +139,10 @@ A minor bug was introduced and fixed in the same pass: `LaunchForm`'s wallet-gat
 
 **Still deliberately not built:** the actual on-chain payout execution (calling `claim()` on the escrow with the subreddit's derived key, then sending ETH to the mod's wallet). `/admin`'s "Mark paid" only records that a payout happened — it doesn't yet trigger one. That's flagged as its own, more sensitive next step (see the note left for the user about this earlier in the session): either build real server-side transaction-signing code, or expose the derived private key for the user's own wallet to use, each with different tradeoffs worth discussing deliberately rather than bundling in.
 
+**Update, same session: Claim no longer requires connecting a wallet at all.** The user's idea: after getting verified, the mod just types in whatever wallet address they want the payout sent to and clicks "Cash out" — no need to have connected that specific wallet to SubPad. This simplified `ClaimFlow.tsx` significantly: dropped the Privy/`useWallets` dependency entirely, added a plain "payout wallet" text field validated with viem's `isAddress`, renamed the flow's final action to "Cash out." Lower friction for mods (no wallet-connect step needed just to request a payout) and better UX (the destination doesn't have to be whatever wallet they happened to log in with — could be a multisig, an exchange address, anything). Tested the **entire flow live in the browser** end to end (not curl this time — actually clicked through subreddit → username → code → wallet address → Cash out) and confirmed the real submission landed correctly in the live Turso database with every field matching, then cleaned up the test row.
+
+Launch still requires a connected wallet (unavoidable — it has to sign the actual on-chain transaction). Claim does not.
+
 ## 9. How the user likes to work (carried over, still applies)
 
 - **"dnc" means "do not code": discuss only.** Do not write code until told to. This was in effect for the entirety of the planning conversation this brief summarizes — check whether it's still in effect at the start of the next session rather than assuming either way.

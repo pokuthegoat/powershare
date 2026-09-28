@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { formatEther, type Hex } from "viem";
-import { PRIVY_APP_ID } from "@/lib/config";
+import { formatEther, isAddress, type Hex } from "viem";
 import { PONS_FEE_ESCROW_ABI, PONS_FEE_ESCROW_ADDRESS, ponsPublicClient } from "@/lib/pons";
 
 type Step = "subreddit" | "verify" | "claim" | "requested";
@@ -15,53 +13,20 @@ function randomCode() {
   return `SUBPAD-${code}`;
 }
 
-function ConnectGate() {
-  if (!PRIVY_APP_ID) {
-    return (
-      <div className="box form-card">
-        <h1>Claim fees</h1>
-        <p className="t-lead">Claiming isn&apos;t switched on yet. Check back soon.</p>
-      </div>
-    );
-  }
-  return <PrivyConnectGate />;
-}
-
-function PrivyConnectGate() {
-  const { ready, authenticated, login } = usePrivy();
-  if (ready && authenticated) return <ClaimSteps />;
-  return (
-    <div className="box form-card">
-      <h1>Claim fees</h1>
-      <p className="t-lead">Connect your wallet first — a claim gets sent to this wallet once it&apos;s approved.</p>
-      <button type="button" className="btn btn-primary" disabled={!ready} onClick={() => login()}>
-        {ready ? "Connect wallet" : "Loading…"}
-      </button>
-    </div>
-  );
-}
-
-export function ClaimFlow() {
-  if (!PRIVY_APP_ID) return <ConnectGate />;
-  return <PrivyConnectGate />;
-}
-
 type Escrow = { state: "loading" } | { state: "ready"; address: Hex; balanceEth: number } | { state: "error"; message: string };
 type Submit = { state: "idle" } | { state: "submitting" } | { state: "error"; message: string };
 
-function ClaimSteps() {
-  const { wallets } = useWallets();
-  const wallet = wallets[0];
-
+export function ClaimFlow() {
   const [step, setStep] = useState<Step>("subreddit");
   const [subreddit, setSubreddit] = useState("");
   const [redditUsername, setRedditUsername] = useState("");
+  const [payoutWallet, setPayoutWallet] = useState("");
   const [code] = useState(randomCode);
   const [escrow, setEscrow] = useState<Escrow>({ state: "loading" });
   const [submit, setSubmit] = useState<Submit>({ state: "idle" });
 
-  async function requestClaim() {
-    if (escrow.state !== "ready" || !wallet) return;
+  async function cashOut() {
+    if (escrow.state !== "ready" || !isAddress(payoutWallet)) return;
     setSubmit({ state: "submitting" });
     try {
       const res = await fetch("/api/claim-requests", {
@@ -72,7 +37,7 @@ function ClaimSteps() {
           redditUsername,
           verificationCode: code,
           escrowAddress: escrow.address,
-          payoutWallet: wallet.address,
+          payoutWallet,
         }),
       });
       if (!res.ok) throw new Error("Couldn't submit the claim request. Try again in a moment.");
@@ -162,8 +127,8 @@ function ClaimSteps() {
         <div className="auth-step">
           <b>2</b>
           <span>
-            When you request the claim, it goes into a queue. Before anything is sent, someone manually checks that
-            the code is there and that u/{redditUsername} is really on r/{subreddit}&apos;s public moderator list.
+            When you cash out, it goes into a queue. Before anything is sent, someone manually checks that the code
+            is there and that u/{redditUsername} is really on r/{subreddit}&apos;s public moderator list.
           </span>
         </div>
         <button type="button" className="btn btn-primary" onClick={() => setStep("claim")}>
@@ -174,6 +139,7 @@ function ClaimSteps() {
   }
 
   if (step === "claim") {
+    const walletInvalid = payoutWallet.length > 0 && !isAddress(payoutWallet);
     return (
       <div className="box form-card">
         <span className="t-eyebrow section-num">Claim &middot; r/{subreddit}</span>
@@ -193,8 +159,24 @@ function ClaimSteps() {
           {escrow.state === "loading" && <p className="progress-amount">Reading live…</p>}
           {escrow.state === "error" && <p className="form-note">{escrow.message}</p>}
         </div>
-        <button type="button" className="btn btn-primary" disabled={escrow.state !== "ready" || submit.state === "submitting"} onClick={requestClaim}>
-          {submit.state === "submitting" ? "Submitting…" : "Request claim"}
+        <div className="field">
+          <label htmlFor="payout-wallet">Wallet to receive the payout</label>
+          <input
+            id="payout-wallet"
+            className="input"
+            placeholder="0x..."
+            value={payoutWallet}
+            onChange={(e) => setPayoutWallet(e.target.value.trim())}
+          />
+          {walletInvalid && <span className="field-hint">That doesn&apos;t look like a valid address.</span>}
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={escrow.state !== "ready" || !isAddress(payoutWallet) || submit.state === "submitting"}
+          onClick={cashOut}
+        >
+          {submit.state === "submitting" ? "Submitting…" : "Cash out"}
         </button>
         {submit.state === "error" && <p className="form-note">{submit.message}</p>}
         <p className="form-note">Someone checks u/{redditUsername} against r/{subreddit}&apos;s moderator list before sending anything — not instant.</p>
@@ -208,7 +190,7 @@ function ClaimSteps() {
       <h1>We&apos;ll review it soon.</h1>
       <p className="t-lead">
         Your claim for r/{subreddit} (as u/{redditUsername}) is in the queue. Once someone checks the code and the
-        moderator list, the ETH gets sent to your connected wallet.
+        moderator list, the ETH gets sent to {payoutWallet}.
       </p>
     </div>
   );
