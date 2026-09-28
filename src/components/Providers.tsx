@@ -2,6 +2,7 @@
 
 import { PrivyProvider } from "@privy-io/react-auth";
 import { PRIVY_APP_ID } from "@/lib/config";
+import { robinhoodChain } from "@/lib/robinhoodChain";
 
 /**
  * App-wide client providers. Server components passed as `children` stay server-rendered.
@@ -18,6 +19,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       config={{
         loginMethods: ["wallet"],
         appearance: { theme: "dark", accentColor: "#2450e6", showWalletLoginFirst: true },
+        // Robinhood Chain isn't one of Privy's built-in known chains — without this, switchChain/sendTransaction
+        // throw "Unsupported chainId" even though the wallet itself supports it fine.
+        supportedChains: [robinhoodChain],
+        defaultChain: robinhoodChain,
       }}
     >
       {children}
