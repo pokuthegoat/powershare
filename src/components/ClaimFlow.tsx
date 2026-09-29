@@ -25,7 +25,7 @@ export function ClaimFlow() {
   const [escrow, setEscrow] = useState<Escrow>({ state: "loading" });
   const [submit, setSubmit] = useState<Submit>({ state: "idle" });
 
-  async function cashOut() {
+  async function submitClaim() {
     if (escrow.state !== "ready" || !isAddress(payoutWallet)) return;
     setSubmit({ state: "submitting" });
     try {
@@ -127,7 +127,7 @@ export function ClaimFlow() {
         <div className="auth-step">
           <b>2</b>
           <span>
-            When you cash out, it goes into a queue. Before anything is sent, someone manually checks that the code
+            When you claim, it goes into a queue. Before anything is sent, someone manually checks that the code
             is there and that u/{redditUsername} is really on r/{subreddit}&apos;s public moderator list.
           </span>
         </div>
@@ -174,9 +174,9 @@ export function ClaimFlow() {
           type="button"
           className="btn btn-primary"
           disabled={escrow.state !== "ready" || !isAddress(payoutWallet) || submit.state === "submitting"}
-          onClick={cashOut}
+          onClick={submitClaim}
         >
-          {submit.state === "submitting" ? "Submitting…" : "Cash out"}
+          {submit.state === "submitting" ? "Submitting…" : "Claim"}
         </button>
         {submit.state === "error" && <p className="form-note">{submit.message}</p>}
         <p className="form-note">Someone checks u/{redditUsername} against r/{subreddit}&apos;s moderator list before sending anything — not instant.</p>

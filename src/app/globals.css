@@ -434,20 +434,6 @@ span.pill:hover { background: var(--white); color: var(--ink); }
 
 .fine { font-family: var(--font-code); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--subtle); line-height: 1.6; }
 
-/* Stock marquee (section 03): a full-width strip, edge to edge. */
-.marquee-wrap { margin-top: 40px; }
-.marquee { overflow: hidden; background: var(--white); border-block: 1px solid var(--line); }
-.marquee-track { display: flex; width: max-content; animation: marquee 44s linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
-.marquee-group { display: flex; flex: none; }
-.marquee-item { display: flex; align-items: baseline; gap: 12px; padding: 18px 0 18px 32px; white-space: nowrap; }
-.marquee-item b { font-family: var(--font-code); font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
-.marquee-item span { font-size: 15px; color: var(--muted); }
-/* A small square between the entries. */
-.marquee-item i { align-self: center; width: 7px; height: 7px; margin-left: 20px; background: var(--ink); }
-/* The track holds two identical groups, so sliding it by half its width loops with no seam. */
-@keyframes marquee { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
 /* Steps (section 04): one bordered strip of cells */
 .steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 48px; border: 1px solid var(--line); background: var(--white); }

@@ -5,7 +5,6 @@ import { Logo } from "@/components/Logo";
 import { Faq } from "@/components/Faq";
 import { LaunchButton, ClaimButton } from "@/components/Buttons";
 import { EscrowMock } from "@/components/EscrowMock";
-import { TickerMarquee } from "@/components/TickerMarquee";
 import { SITE } from "@/lib/config";
 
 const STEPS = [
@@ -26,7 +25,7 @@ const STEPS = [
   },
   {
     title: "Verify",
-    body: "A mod posts a short code somewhere only a mod can edit, proving they actually run the sub.",
+    body: "A mod verifies their identity, proving they actually run the sub.",
     icon: (
       <>
         <path d="M12 3l7 3v5c0 5-3.2 7.7-7 9-3.8-1.3-7-4-7-9V6l7-3Z" />
@@ -73,7 +72,7 @@ const FAQ = [
   },
   {
     q: "How do mods actually get paid?",
-    a: "Once verified, click \"Claim fees\" to request a payout. We send it as ETH to your connected wallet the next time we're online — it's a manual, reviewed payout, not an instant automatic one.",
+    a: "Once verified, click \"Claim fees\" and give us the wallet address you want paid — no need to connect it. Within a short period of time, the funds will land in the wallet you provided.",
   },
   {
     q: "Is the money safe?",
@@ -188,13 +187,12 @@ export default function Home() {
               </Reveal>
               <Reveal className="stat">
                 <span className="num">1</span>
-                <p>Escrow address per subreddit, so fees never mix with another coin&apos;s</p>
+                <p>Escrow address per subreddit, so fees never mix with another subreddit&apos;s</p>
               </Reveal>
             </div>
             <Reveal>
               <p className="fine" style={{ marginTop: 20, maxWidth: 720 }}>
-                Trading and escrow run on Pons v2, a public protocol on Robinhood Chain. Availability may vary by
-                country.
+                Trading and escrow run on Pons v2, a public protocol on Robinhood Chain.
               </p>
             </Reveal>
           </div>
@@ -212,9 +210,6 @@ export default function Home() {
               </p>
             </Reveal>
           </div>
-          <Reveal className="marquee-wrap">
-            <TickerMarquee />
-          </Reveal>
         </section>
 
         {/* 04 HOW IT WORKS */}
@@ -293,12 +288,7 @@ export default function Home() {
             <Reveal className="split-text">
               <span className="t-eyebrow section-num">06 &middot; Trading</span>
               <p className="t-h1">Trading happens on Pons.</p>
-              <p className="t-lead t-muted">
-                We don&apos;t build a chart or a buy/sell screen. Every coin trades on Pons v2&apos;s own page, with
-                its own live chart. SubPad handles the part that matters for the subreddit: escrow and claiming.
-              </p>
               <ul className="req-list">
-                <li>Built on Pons v2, live on Robinhood Chain</li>
                 <li>Each subreddit gets its own dedicated escrow address</li>
                 <li>Nobody can spend it before a verified mod claims it</li>
               </ul>
@@ -306,7 +296,6 @@ export default function Home() {
                 <LaunchButton />
                 <ClaimButton />
               </div>
-              <p className="fine">Charts, liquidity and swaps are handled entirely by Pons v2 — SubPad never touches them.</p>
             </Reveal>
             <Reveal className="app-window">
               <EscrowMock />

@@ -21,13 +21,3 @@ export const NAV_LINKS = [
   { label: "Subreddits", href: "/subreddits" },
   { label: "Help", href: "/help" },
 ] as const;
-
-/** Example subreddit coins for the landing page marquee. Not live data. */
-export const EXAMPLE_COINS = [
-  { symbol: "NBA", name: "r/nba" },
-  { symbol: "WSB", name: "r/wallstreetbets" },
-  { symbol: "GAMING", name: "r/gaming" },
-  { symbol: "MOVIES", name: "r/movies" },
-  { symbol: "CATS", name: "r/cats" },
-  { symbol: "DIY", name: "r/DIY" },
-] as const;
