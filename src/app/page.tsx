@@ -260,10 +260,6 @@ export default function Home() {
             <Reveal className="section-head">
               <span className="t-eyebrow section-num">05 &middot; What it pays</span>
               <p className="t-h1">The tax rate decides the pace.</p>
-              <p className="t-lead t-muted">
-                The creator tax is set once, at launch, between 0% and 10%. A higher tax raises more per trade, but
-                can slow down trading.
-              </p>
             </Reveal>
             <Reveal className="pay-table">
               <div className="pay-row is-head">
