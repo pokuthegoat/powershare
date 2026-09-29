@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
+const CONTRACT_ADDRESS = "0xd579a38fb0a17ac613af20707134936b814d769a";
 
 /** A nav pill that shows "CA" and expands to reveal the full contract address on hover; clicking copies it. */
 export function CaButton() {

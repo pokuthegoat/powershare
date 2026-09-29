@@ -794,6 +794,13 @@ input[type="range"]::-moz-range-thumb {
 }
 .code-box button { flex: none; }
 
+.launch-list { display: flex; flex-direction: column; margin-top: 16px; border: 1px solid var(--line); background: var(--white); }
+.launch-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 12px; align-items: center; padding: 14px 18px; border-top: 1px solid var(--hair); font-size: 14.5px; }
+.launch-row:first-child { border-top: 0; }
+.launch-row.is-head { background: var(--beige); font-family: var(--font-code); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); padding-block: 10px; }
+.launch-row a { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 760px) { .launch-row { grid-template-columns: 1fr; gap: 4px; } .launch-row.is-head { display: none; } }
+
 /* ---------- Placeholder / coming-soon pages ---------- */
 
 .placeholder-card { display: flex; flex-direction: column; gap: 14px; }
