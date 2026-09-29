@@ -18,8 +18,8 @@ export function Logo({ large = false }: { large?: boolean }) {
   };
   return (
     <Link href="/" className={`logo${large ? " is-lg" : ""}`} aria-label="SubPad home" onClick={onClick}>
-      {/* eslint-disable-next-line @next/next/no-img-element -- a tiny SVG mark */}
-      <img className="logo-mark" src="/logo.svg" alt="" width={64} height={64} />
+      {/* eslint-disable-next-line @next/next/no-img-element -- a tiny mark */}
+      <img className="logo-mark" src="/logo.png" alt="" width={64} height={64} />
       SubPad
     </Link>
   );

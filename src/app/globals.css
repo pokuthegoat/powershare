@@ -1,16 +1,17 @@
 /* ------------------------------------------------------------------
    PowerShare design system
-   Three colours: white (primary), black (secondary) and beige (third).
+   Three colours: white (primary), black (secondary) and orange (third,
+   Reddit's own #ff4500).
    Square corners, 1px black hairlines, mono labels and numbered sections
-   (the visual language IdleNet is built on), with our own type and a
-   pearl-coloured morphing blob behind the page.
+   (the visual language IdleNet is built on), with an orange morphing
+   blob behind the page.
 ------------------------------------------------------------------- */
 
 :root {
   --white: #ffffff;
   --ink: #0a0a0a;
-  --beige: #ece2cf;
-  --beige-2: #e1d4bb;
+  --beige: #ff4500;
+  --beige-2: #e63e00;
   --muted: #0a0a0a9e;
   --subtle: #0a0a0a70;
   --line: #0a0a0a;

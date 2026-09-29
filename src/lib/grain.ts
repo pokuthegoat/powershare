@@ -7,7 +7,7 @@
  *
  * GameStock's version nudges the shade of the picture underneath. That can't be done to a picture we don't render
  * ourselves, so it is drawn as a transparent overlay instead: dark specks where the noise is negative, light ones where
- * it is positive. On the white page only the dark specks show, over the blob and beige both kinds do.
+ * it is positive. On the white page only the dark specks show, over the blob and orange fills both kinds do.
  */
 
 const VERT = `

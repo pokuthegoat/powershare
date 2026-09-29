@@ -10,7 +10,7 @@ import { createGrain } from "@/lib/grain";
  *  0. Film grain (from GameStock) over the whole layer.
  *  1. Flat outline shapes (rings, squares, a pill, a dot grid) that drift at different speeds as you scroll.
  *     They are hairlines only, never filled.
- *  2. One blob, drawn by a ray-marching shader and printed as a halftone (beige, with black dots for the shading). Scrolling down morphs it between three shapes: a tri-lobed
+ *  2. One blob, drawn by a ray-marching shader and printed as a halftone (orange, with black dots for the shading). Scrolling down morphs it between three shapes: a tri-lobed
  *     metaball with holes, a soft lumpy blob, and a rounded cube with holes. It also glides across the screen from
  *     section to section. The shapes are signed distance fields, so the holes open and close smoothly while it morphs.
  *
@@ -185,7 +185,7 @@ vec4 trace(vec2 uv, out float nearEdge) {
   float aa = 0.9 / uCell;
   float dotA = (1.0 - smoothstep(rad - aa, rad + aa, dist)) * smoothstep(0.0, 0.1, rad);
 
-  vec3 fill = vec3(0.925, 0.886, 0.812); // the site's beige
+  vec3 fill = vec3(1.000, 0.271, 0.000); // the site's orange (Reddit's #ff4500)
   vec3 ink = vec3(0.039);                // the site's black
   return vec4(mix(fill, ink, dotA), 1.0);
 }
