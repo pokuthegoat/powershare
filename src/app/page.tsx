@@ -36,7 +36,7 @@ const STEPS = [
   },
   {
     title: "Claim",
-    body: "Once verified, request a payout whenever you want. No waiting on anyone's schedule.",
+    body: "Once verified, claim a payout whenever you want. No waiting on anyone's schedule.",
     icon: (
       <>
         <rect x="3" y="7" width="18" height="12" rx="1" />
