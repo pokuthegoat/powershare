@@ -18,6 +18,5 @@ export const MAX_CREATOR_TAX = 10;
 export const NAV_LINKS = [
   { label: "Launch", href: "/launch" },
   { label: "Claim", href: "/claim" },
-  { label: "Subreddits", href: "/subreddits" },
   { label: "Help", href: "/help" },
 ] as const;

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db, type Launch } from "@/lib/db.server";
+import { db } from "@/lib/db.server";
 
 type CreateBody = {
   subreddit: string;
@@ -25,10 +25,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ id: result.rows[0]?.id }, { status: 201 });
-}
-
-/** Every launch, newest first. Public — the dashboard reads this. */
-export async function GET() {
-  const result = await db().execute("SELECT * FROM launches ORDER BY launched_at DESC");
-  return NextResponse.json({ launches: result.rows as unknown as Launch[] });
 }
